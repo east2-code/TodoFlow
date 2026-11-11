@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= locals.title || 'TodoFlow' %> · TodoFlow</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="<%= locals.bodyClass || '' %>">
+
+<% if (currentUser) { %>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="/">
+        <span class="brand-mark"></span>
+        TodoFlow
+      </a>
+      <nav class="nav">
+        <a href="/" class="<%= locals.activeNav === 'list' ? 'active' : '' %>">My Tasks</a>
+        <a href="/todos/new" class="<%= locals.activeNav === 'new' ? 'active' : '' %>">New Task</a>
+      </nav>
+      <div class="user-area">
+        <span class="user-chip"><%= currentUser.name || currentUser.username %></span>
+        <a class="btn btn-ghost btn-sm" href="/logout">Logout</a>
+      </div>
+    </div>
+  </header>
+<% } %>
+
+<main class="<%= locals.mainClass || 'page' %>">

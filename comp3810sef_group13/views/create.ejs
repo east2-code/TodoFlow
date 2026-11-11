@@ -1,0 +1,16 @@
+<%- include('partials/header', { title: 'New Task', activeNav: 'new' }) %>
+
+<div class="page-head">
+  <h1>New Task</h1>
+  <p class="muted">Add something you want to get done.</p>
+</div>
+
+<%- include('partials/todoForm', {
+      action: '/todos',
+      submitLabel: 'Create task',
+      todo: todo,
+      error: error,
+      showCompleted: false
+    }) %>
+
+<%- include('partials/footer') %>

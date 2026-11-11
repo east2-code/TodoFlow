@@ -1,0 +1,17 @@
+<%- include('partials/header', { title: 'Edit Task', activeNav: 'list' }) %>
+
+<div class="page-head">
+  <a class="back-link" href="/">Back to list</a>
+  <h1>Edit Task</h1>
+  <p class="muted">Update the details and save your changes.</p>
+</div>
+
+<%- include('partials/todoForm', {
+      action: '/todos/' + todo._id,
+      submitLabel: 'Save changes',
+      todo: todo,
+      error: error,
+      showCompleted: true
+    }) %>
+
+<%- include('partials/footer') %>

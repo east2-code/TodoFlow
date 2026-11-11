@@ -1,0 +1,46 @@
+<% if (error) { %>
+  <div class="alert alert-error"><%= error %></div>
+<% } %>
+
+<form class="card form-card" method="POST" action="<%= action %>">
+  <label class="field">
+    <span>Title <em>*</em></span>
+    <input name="title" maxlength="80" required value="<%= todo.title || '' %>"
+           placeholder="e.g. Finish COMP3810 group project report">
+  </label>
+
+  <label class="field">
+    <span>Description</span>
+    <textarea name="description" maxlength="500" rows="4"
+              placeholder="Optional details, links or notes"><%= todo.description || '' %></textarea>
+  </label>
+
+  <div class="field-row">
+    <label class="field">
+      <span>Priority</span>
+      <select name="priority">
+        <option value="high" <%= todo.priority === 'high' ? 'selected' : '' %>>High</option>
+        <option value="medium" <%= !todo.priority || todo.priority === 'medium' ? 'selected' : '' %>>Medium</option>
+        <option value="low" <%= todo.priority === 'low' ? 'selected' : '' %>>Low</option>
+      </select>
+    </label>
+
+    <label class="field">
+      <span>Deadline</span>
+      <input type="date" name="deadline"
+             value="<%= todo.deadline ? formatDate(todo.deadline) : '' %>">
+    </label>
+  </div>
+
+  <% if (locals.showCompleted) { %>
+    <label class="checkline">
+      <input type="checkbox" name="completed" <%= todo.completed ? 'checked' : '' %>>
+      <span>Mark as completed</span>
+    </label>
+  <% } %>
+
+  <div class="form-actions">
+    <button class="btn btn-primary" type="submit"><%= submitLabel %></button>
+    <a class="btn btn-ghost" href="/">Cancel</a>
+  </div>
+</form>

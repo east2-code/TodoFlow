@@ -1,0 +1,133 @@
+<%- include('partials/header', { title: 'My Tasks', activeNav: 'list' }) %>
+
+<% if (msg) { %>
+  <div class="alert alert-success"><%= msg %></div>
+<% } %>
+
+<section class="hero">
+  <div>
+    <h1>Hello, <%= currentUser.name || currentUser.username %></h1>
+    <p class="muted">
+      You have <strong><%= stats.active %></strong> active task(s)<% if (stats.overdue > 0) { %>,
+      <span class="text-danger"><%= stats.overdue %> overdue</span><% } %>.
+    </p>
+  </div>
+  <a class="btn btn-primary" href="/todos/new">New Task</a>
+</section>
+
+<!-- Statistics from one MongoDB aggregate call -->
+<section class="stats">
+  <article class="stat-card">
+    <span class="stat-label">Total</span>
+    <span class="stat-value"><%= stats.total %></span>
+  </article>
+  <article class="stat-card">
+    <span class="stat-label">Active</span>
+    <span class="stat-value"><%= stats.active %></span>
+  </article>
+  <article class="stat-card">
+    <span class="stat-label">Completed</span>
+    <span class="stat-value"><%= stats.completed %></span>
+  </article>
+  <article class="stat-card">
+    <span class="stat-label">Overdue</span>
+    <span class="stat-value"><%= stats.overdue %></span>
+  </article>
+</section>
+
+<section class="progress-card">
+  <div class="progress-head">
+    <span>Completion progress</span>
+    <strong><%= stats.completionRate %>%</strong>
+  </div>
+  <div class="progress"><span style="width: <%= stats.completionRate %>%"></span></div>
+  <div class="priority-line">
+    <span class="badge badge-high">High: <%= stats.high %></span>
+    <span class="badge badge-medium">Medium: <%= stats.medium %></span>
+    <span class="badge badge-low">Low: <%= stats.low %></span>
+  </div>
+</section>
+
+<!-- Read: keyword + status + priority + sort -->
+<form class="filters" method="GET" action="/">
+  <input type="search" name="q" value="<%= query.q %>" placeholder="Search title or description">
+
+  <select name="status">
+    <option value="all" <%= query.status === 'all' ? 'selected' : '' %>>All status</option>
+    <option value="active" <%= query.status === 'active' ? 'selected' : '' %>>Active</option>
+    <option value="completed" <%= query.status === 'completed' ? 'selected' : '' %>>Completed</option>
+  </select>
+
+  <select name="priority">
+    <option value="all" <%= query.priority === 'all' ? 'selected' : '' %>>All priority</option>
+    <option value="high" <%= query.priority === 'high' ? 'selected' : '' %>>High</option>
+    <option value="medium" <%= query.priority === 'medium' ? 'selected' : '' %>>Medium</option>
+    <option value="low" <%= query.priority === 'low' ? 'selected' : '' %>>Low</option>
+  </select>
+
+  <select name="sort">
+    <option value="created" <%= query.sort === 'created' ? 'selected' : '' %>>Newest first</option>
+    <option value="deadline" <%= query.sort === 'deadline' ? 'selected' : '' %>>By deadline</option>
+    <option value="priority" <%= query.sort === 'priority' ? 'selected' : '' %>>By priority</option>
+  </select>
+
+  <button class="btn btn-primary" type="submit">Filter</button>
+  <a class="btn btn-ghost" href="/">Reset</a>
+</form>
+
+<% if (todos.length === 0) { %>
+  <div class="empty">
+    <h3>No tasks found</h3>
+    <p class="muted">Try a different filter, or create your first task.</p>
+    <a class="btn btn-primary" href="/todos/new">New Task</a>
+  </div>
+<% } else { %>
+  <ul class="todo-list">
+    <% for (const todo of todos) { %>
+      <li class="todo-card <%= todo.completed ? 'is-done' : '' %>">
+        <!-- Update: toggle completed -->
+        <form method="POST" action="/todos/<%= todo._id %>/toggle" class="toggle-form">
+          <button type="submit"
+                  class="checkbox <%= todo.completed ? 'checked' : '' %>"
+                  title="<%= todo.completed ? 'Mark as active' : 'Mark as completed' %>"
+                  aria-label="Toggle task"></button>
+        </form>
+
+        <div class="todo-main">
+          <div class="todo-title-row">
+            <a class="todo-title" href="/todos/<%= todo._id %>"><%= todo.title %></a>
+            <span class="badge badge-<%= todo.priority %>"><%= todo.priority %></span>
+            <% if (todo.completed) { %><span class="badge badge-done">Done</span><% } %>
+            <% if (todo.isOverdue) { %><span class="badge badge-overdue">Overdue</span><% } %>
+          </div>
+
+          <% if (todo.description) { %>
+            <p class="todo-desc"><%= todo.description %></p>
+          <% } %>
+
+          <div class="todo-meta">
+            <span>Due: <%= todo.deadline ? formatDate(todo.deadline) : 'no deadline' %></span>
+            <span>Created: <%= formatDate(todo.createdAt) %></span>
+          </div>
+        </div>
+
+        <div class="todo-actions">
+          <a class="btn btn-ghost btn-sm" href="/todos/<%= todo._id %>/edit">Edit</a>
+          <form method="POST" action="/todos/<%= todo._id %>/delete"
+                onsubmit="return confirm('Delete this task?');">
+            <button class="btn btn-danger btn-sm" type="submit">Delete</button>
+          </form>
+        </div>
+      </li>
+    <% } %>
+  </ul>
+<% } %>
+
+<% if (stats.completed > 0) { %>
+  <form method="POST" action="/todos/clear-completed" class="clear-form"
+        onsubmit="return confirm('Remove all completed tasks?');">
+    <button class="btn btn-ghost btn-sm" type="submit">Clear completed (<%= stats.completed %>)</button>
+  </form>
+<% } %>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,48 @@
+<%- include('partials/header', { title: todo.title, activeNav: 'list' }) %>
+
+<div class="page-head">
+  <a class="back-link" href="/">Back to list</a>
+  <div class="title-row">
+    <h1><%= todo.title %></h1>
+    <span class="badge badge-<%= todo.priority %>"><%= todo.priority %></span>
+    <% if (todo.completed) { %><span class="badge badge-done">Done</span><% } %>
+    <% if (todo.isOverdue) { %><span class="badge badge-overdue">Overdue</span><% } %>
+  </div>
+</div>
+
+<article class="card detail-card">
+  <dl class="detail-list">
+    <dt>Description</dt>
+    <dd><%= todo.description || 'No description.' %></dd>
+
+    <dt>Status</dt>
+    <dd><%= todo.completed ? 'Completed' : 'Active' %></dd>
+
+    <dt>Priority</dt>
+    <dd class="capitalize"><%= todo.priority %></dd>
+
+    <dt>Deadline</dt>
+    <dd><%= todo.deadline ? formatDate(todo.deadline) : 'No deadline' %></dd>
+
+    <dt>Created</dt>
+    <dd><%= formatDate(todo.createdAt) %></dd>
+
+    <dt>Completed at</dt>
+    <dd><%= todo.completedAt ? formatDate(todo.completedAt) : '—' %></dd>
+  </dl>
+
+  <div class="form-actions">
+    <form method="POST" action="/todos/<%= todo._id %>/toggle">
+      <button class="btn btn-primary" type="submit">
+        <%= todo.completed ? 'Mark as active' : 'Mark as completed' %>
+      </button>
+    </form>
+    <a class="btn btn-ghost" href="/todos/<%= todo._id %>/edit">Edit</a>
+    <form method="POST" action="/todos/<%= todo._id %>/delete"
+          onsubmit="return confirm('Delete this task?');">
+      <button class="btn btn-danger" type="submit">Delete</button>
+    </form>
+  </div>
+</article>
+
+<%- include('partials/footer') %>
