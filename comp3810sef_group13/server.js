@@ -17,7 +17,7 @@ const app = express();
 /* 1. App configuration */
 const PORT = process.env.PORT || 8099;
 const MONGODB_URI =
-  'mongodb+srv://hkmu:hkmu12345@cluster0.rbb9ovu.mongodb.net/comp3810sef_todo?retryWrites=true&w=majority&appName=Cluster0';
+  'mongodb+srv://account:password@cluster0.rbb9ovu.mongodb.net/comp3810sef_todo?retryWrites=true&w=majority&appName=Cluster0';
 const SESSION_KEY = process.env.SESSION_KEY || 'comp3810sef-todoflow-secret-key';
 
 app.set('view engine', 'ejs');
