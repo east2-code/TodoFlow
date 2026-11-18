@@ -35,12 +35,12 @@ Group No. ： `comp3810sef_group13`
 Group size ： 4 members 
 Course ： COMP3810SEF 
 
-| # | Student name | SID |            Work role             |                                      Main files / pages owned                                   |
-|---|--------------|-----|----------------------------------|-------------------------------------------------------------------------------------------------|
-| 1 | _(name)_ | _(SID)_ | Backend core / integration       | `server.js`, `routes/webRoutes.js`, `controllers/todoWebController.js`                          |
-| 2 | _(name)_ | _(SID)_ | Authentication & security        | `controllers/authController.js`, `models/user.js`, `middleware/auth.js`                         |
-| 3 | _(name)_ | _(SID)_ | Data model & RESTful API         | `models/todo.js`, `controllers/todoApiController.js`, `routes/apiRoutes.js`, `utils/helpers.js` |
-| 4 | _(name)_ | _(SID)_ | UI / UX, documentation & testing | `views/*.ejs`, `public/css/style.css`, `README.md`, CURL test list, demo rehearsal              |
+| # | Student name | SID | Work role | Main files / pages owned |
+|---|---|---|---|---|
+| 1 | _(name)_ | _(SID)_ | Backend entry & integration | `server.js`, `routes/webRoutes.js`, `README.md` |
+| 2 | _(name)_ | _(SID)_ | Authentication & security | `controllers/authController.js`, `models/user.js`, `middleware/auth.js`, `views/login.ejs`, `views/register.ejs` |
+| 3 | _(name)_ | _(SID)_ | Web features & UI | `controllers/todoWebController.js`, `views/*.ejs`, `public/css/style.css` |
+| 4 | _(name)_ | _(SID)_ | Data model & RESTful API | `models/todo.js`, `controllers/todoApiController.js`, `routes/apiRoutes.js`, `utils/helpers.js` |
 
 ---
 
