@@ -217,12 +217,20 @@ curl -X POST http://localhost:8099/api/todos \
   -H "Content-Type: application/json" \
   --data '{"title":"Buy milk","description":"2 litres","priority":"high","deadline":"2026-12-01","userid":"demo"}'
 
+#-cmd
+curl -i -X POST http://localhost:8099/api/todos -H "Content-Type: application/json" --data "{\"title\":\"Buy milk\",\"description\":\"2 litres\",\"priority\":\"high\",\"deadline\":\"2026-12-01\",\"userid\":\"demo\"}"
+
 # ---------- UPDATE (PUT) ----------
 # 8. Change only the fields you send
 curl -X PUT http://localhost:8099/api/todos/<ID> \
   -H "Content-Type: application/json" \
   --data '{"completed":true,"priority":"low"}'
 
+#-cmd
+curl -i -X PUT http://localhost:8099/api/todos/6afdcfc5cf0a8852a941418d -H "Content-Type: application/json" --data "{\"completed\":true,\"priority\":\"low\"}"
+
+
+#8b
 curl -X PUT http://localhost:8099/api/todos/<ID> \
   -H "Content-Type: application/json" \
   --data '{"title":"Buy milk and bread","deadline":"2026-12-05"}'
@@ -248,52 +256,4 @@ curl -X DELETE http://localhost:8099/api/todos/<ID>
 
 ---
 
-
-
-## 5. Design notes (useful for the demo Q&A)
-
-**Request flow (MVC)**
-
-```
-Browser / curl
-   -> server.js middleware (static, body parser, cookie-session, logger)
-   -> routes/webRoutes.js or routes/apiRoutes.js
-   -> controllers/*.js (the Controller)
-   -> models/*.js (the Model, via Mongoose)
-   -> MongoDB
-   -> res.render(EJS) (the View) or res.json()
-```
-
-**Why `cookie-session` instead of OAuth?**
-
-The course allows cookie-session, OAuth or any other authentication method. `cookie-session` is
-chosen because it is self-contained: no third-party app ID/secret, no external callback URL, and it
-works reliably on a local machine or a cloud server during the demo. The session object stores only
-`{ username, name }`, never the password.
-
-**Password handling**
-
-Passwords are never stored in plain text. `models/user.js` generates a random 16-byte salt and
-derives a 64-byte hash with `crypto.scryptSync`; login uses `crypto.timingSafeEqual` to compare.
-
-**Per-user data isolation**
-
-Every web query and every web update/delete filters on
-`{ _id: ..., userid: req.session.user.username }`. Guessing another user's task id therefore still
-returns 404 instead of exposing or modifying the data.
-
-**Input safety**
-
-- EJS `<%= %>` HTML-escapes all user content, preventing stored XSS.
-- Keyword search escapes regular-expression metacharacters, so a search for `a.b` is treated
-  literally instead of as a wildcard pattern.
-- Mongoose schema validation (`required`, `maxlength`, `enum`) rejects malformed documents.
-
-**Statistics with aggregation**
-
-The dashboard numbers come from one `Todo.aggregate()` call using `$match`, `$group` and `$cond`
-(see `utils/helpers.js`). This avoids five separate `countDocuments()` round trips.
-
-
----
 
