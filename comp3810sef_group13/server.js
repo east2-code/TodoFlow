@@ -17,7 +17,7 @@ const app = express();
 /* 1. App configuration */
 const PORT = process.env.PORT || 8099;
 const MONGODB_URI =
-  'mongodb+srv://account:password@cluster0.rbb9ovu.mongodb.net/comp3810sef_todo?retryWrites=true&w=majority&appName=Cluster0';
+  'mongodb+srv://hkmu:hkmu12345@cluster0.rbb9ovu.mongodb.net/comp3810sef_todo?retryWrites=true&w=majority&appName=Cluster0';
 const SESSION_KEY = process.env.SESSION_KEY || 'comp3810sef-todoflow-secret-key';
 
 app.set('view engine', 'ejs');
@@ -29,6 +29,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Keep the IDE preview happy (it injects a Vite client script); not used by the app.
 app.get('/@vite/client', (req, res) => {
   res.type('application/javascript').send('export {};');
+});
+
+// Browsers ask for /favicon.ico automatically. Answer with 204 No Content
+// instead of letting it fall through to the 404 page.
+app.get('/favicon.ico', (req, res) => {
+  res.status(204).end();
 });
 
 // Body parsers: HTML forms and JSON API requests
